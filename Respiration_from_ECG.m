@@ -82,7 +82,7 @@ Rs = 30;                                            % Stopband Ripple (dB)
 %******* Decide which variable to get out *******
 EDR=EDR_no_interp;
 for i=1:length(EDR)
-    EDR{i}=EDR{i}-nanmean(EDR{i}); %center around zero. Remove offset.
+    EDR{i}=abs(EDR{i}-nanmean(EDR{i})); %center around zero. Remove offset.
 end
 %%
 

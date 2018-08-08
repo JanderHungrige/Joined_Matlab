@@ -35,19 +35,23 @@ function LempelZivRR(RR,Neonate,saving,savefolder,win,Session,S)
 
 type='exhaustive'; % exhaustive or primitive
 normalize=1 ;% 1 or 0
-
+if isrow(RR);  RR=RR'; end
 for i=1:length(RR)
     if all(isnan(RR{i,1}))
         LZNN{i,1}=nan;
         continue
     end
 %     RR{i,1}(isnan(RR{i,1}(1,:)))=[]; % this removes nans for the hilbert
-    Hilberttimeseries=abs(hilbert(RR{i,1}(1,2:end))); % we use 2:end to avoide the nan at the beginning
+    if isnan(RR{i,1})
+        Hilberttimeseries=abs(hilbert(RR{i,1}(1:end,1))); % we use 2:end to avoide the nan at the beginning
+    else
+         Hilberttimeseries=abs(hilbert(RR{i,1}));
+    end
     thres=nanmean(Hilberttimeseries); % determine threshold forom the hilbert time series
     Binarieinz=find(Hilberttimeseries>thres);
     Binarinull=find(Hilberttimeseries<thres);
-    Hilberttimeseries(1,Binarieinz)=1; 
-    Hilberttimeseries(1,Binarinull)=0;
+    Hilberttimeseries(Binarieinz,1)=1; 
+    Hilberttimeseries(Binarinull,1)=0;
     Binstring = binary_seq_to_string(Hilberttimeseries);
     [LZNN{i,1},~,~] = calc_lz_complexity(Binstring, type, normalize);
 end

@@ -1,4 +1,4 @@
- function SampEn_QSE_SEAUC(RR,Neonate,saving,savefolder,win,faktor,Session,S)
+ function [SampEn,QSE,SEAUC,r_opt]=SampEn_QSE_SEAUC(RR,Neonate,saving,savefolder,win,faktor,Session,S)
 
 % #0 clc std 
 % #1 calculate matche sample Entropy (SempEn) with range of r from 0.05 to 0.3 *std (20% is in literatur but not always optimal) 
@@ -29,6 +29,8 @@
 % end
 %
 % #1
+if isrow (RR); RR=RR'; end
+
 dim=2; 
 tau=1;
 nancounter=0; % counting the nans
@@ -36,7 +38,9 @@ nancounter=0; % counting the nans
 r=0.1:0.1:15; %tollereance in ms
 for j=1:length(RR)
     if all(isnan(RR{j,1}))==0
-        RR{j,1}(1,1)=RR{j,1}(1,3);%overwrite the first nan in each cell
+        if isnan(RR{j,1}(1,1))
+            RR{j,1}(1,1)=RR{j,1}(1,3);%overwrite the first nan in each cell
+        end
         % calculating the matchcount for each r per 5min(30sepoch centered)
         for k=1:length(r)% going through r
     %          r(1,k)=SDNN{1,i}*fact(k);
@@ -120,10 +124,10 @@ end
 
 
 if saving
-    Saving(SampEn,savefolder,Neonate,win,Session,S) 
-    Saving(QSE,savefolder,Neonate,win,Session,S) 
-    Saving(SEAUC,savefolder,Neonate,win,Session,S)     
-    Saving(r_opt,savefolder,Neonate,win,Session,S) %just to be able to compare later       
+%     Saving(SampEn,savefolder,Neonate,win,Session,S) 
+%     Saving(QSE,savefolder,Neonate,win,Session,S) 
+%     Saving(SEAUC,savefolder,Neonate,win,Session,S)     
+%     Saving(r_opt,savefolder,Neonate,win,Session,S) %just to be able to compare later       
 end
 
 end

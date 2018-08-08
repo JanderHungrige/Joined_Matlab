@@ -35,7 +35,7 @@ function LempelZivECG(ECG,Neonate,saving,savefolder,win,Session,S)
 
 type='exhaustive'; % exhaustive or primitive
 normalize=1 ;% 1 or 0
-
+if isrow(RR);  RR=RR'; end
 % down sampling to 20Hz
 for i=1:length(ECG)
     ECG{1,i}=downsample(ECG{1,i},500/20);
@@ -48,7 +48,11 @@ for i=1:length(ECG)
         continue
     end
     ECG{1,i}(isnan(ECG{1,i}(:,1)))=[]; % this removes nans for the hilbert
-    Hilberttimeseries=abs(hilbert(ECG{1,i}(:,1))); % we use 2:end to avoide the nan at the beginning
+    if isnan(RR{i,1})
+        Hilberttimeseries=abs(hilbert(RR{i,1}(1:end,1))); % we use 2:end to avoide the nan at the beginning
+    else
+         Hilberttimeseries=abs(hilbert(RR{i,1}));
+    end
     thres=nanmean(Hilberttimeseries); % determine threshold forom the hilbert time series
     Binarieinz=find(Hilberttimeseries>thres);
     Binarinull=find(Hilberttimeseries<thres);

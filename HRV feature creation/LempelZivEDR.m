@@ -40,12 +40,16 @@ for i=1:length(RR)
         continue
     end
 %     RR{i,1}(isnan(RR{i,1}(1,:)))=[]; % this removes nans for the hilbert
-    Hilberttimeseries=abs(hilbert(RR{i,1}(1:end,1))); % we use 2:end to avoide the nan at the beginning
-    thres=nanmean(Hilberttimeseries); % determine threshold forom the hilbert time series
+    if isnan(RR{i,1})
+        Hilberttimeseries=abs(hilbert(RR{i,1}(1:end,1))); % we use 2:end to avoide the nan at the beginning
+    else
+         Hilberttimeseries=abs(hilbert(RR{i,1}));
+    end
+    thres=nanmean(Hilberttimeseries); % determine threshold from the hilbert time series
     Binarieinz=find(Hilberttimeseries>thres);
     Binarinull=find(Hilberttimeseries<thres);
-    Hilberttimeseries(1,Binarieinz)=1; 
-    Hilberttimeseries(1,Binarinull)=0;
+    Hilberttimeseries(Binarieinz,1)=1; 
+    Hilberttimeseries(Binarinull,1)=0;
     Binstring = binary_seq_to_string(Hilberttimeseries);
     [LZEDR{i,1},~,~] = calc_lz_complexity(Binstring, type, normalize);
 end
