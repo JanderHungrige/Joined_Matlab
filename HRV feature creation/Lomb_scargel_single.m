@@ -9,6 +9,15 @@
 % overlap=[0.5,1];
 
 function [powerspectrum,f]=Lomb_scargel_single(RR,RR_idx,t,Neonate,saving,savefolder,win)  
+if isrow(RR)
+    RR=RR';
+end
+if isrow(RR_idx)
+    RR_idx=RR_idx';
+end
+if iscolumn(t)
+    t=t';
+end
    all_idx=cell(1,length(RR));
    timing=cell(1,length(RR));
  % creating time vector  

@@ -1,4 +1,4 @@
-function freqdomainEDR (powerspectrum,f,Neonate,win,saving,savefolder,S)
+function freqdomainEDR (powerspectrum,f,Neonate,win,saving,savefolder,Session,S)
 
 
 
@@ -45,7 +45,7 @@ totpowR=cellfun(@sum,totpowR_band,'UniformOutput',false);
 totpowR(find([totpowR{:}] == 0))={nan};  % 0 into nan
 totpowR=cell2mat(totpowR); %LAAAAAASSSSST entry
 if saving
-    Saving(totpowR,savefolder, Neonate, win,S)
+    Saving(totpowR,savefolder, Neonate, win,Session,S)
 end
 clearvars F
 disp(' -totpowR calculated')
@@ -67,7 +67,7 @@ end
 LFR=cellfun(@sum,LFR_band,'UniformOutput',false);
 LFR(find([LFR{:}] == 0))={nan};  % 0 into nan
 if saving
-    Saving(LFR,savefolder, Neonate, win,S)
+    Saving(LFR,savefolder, Neonate, win,Session,S)
 end
 clearvars F
 disp(' -LFR calculated')
@@ -80,7 +80,7 @@ for i=1:length(LFR)
     LFnormR(i)=((cell2mat(LFR(1,i)))./(totpowR(1,i)))*100; % before LFnorm_AS=((cell2mat(LF_AS))./totpowAS)*100;
 end
 if saving
-    Saving(LFnormR,savefolder, Neonate, win,S)
+    Saving(LFnormR,savefolder, Neonate, win,Session,S)
     disp(' -LFnormR calculated')
 end
         
@@ -100,7 +100,7 @@ end
 HFR=cellfun(@sum,HF_band,'UniformOutput',false);
 HFR(find([HFR{:}] == 0))={nan};  % 0 into nan
 if saving
-    Saving(HFR,savefolder, Neonate, win,S)
+    Saving(HFR,savefolder, Neonate, win,Session,S)
 end
 clearvars F
 disp(' -HFR calculated')
@@ -112,7 +112,7 @@ for i=1:length(HFR)
     HFnormR(i)=(cell2mat(HFR(1,i)))./(totpowR(1,i)-cell2mat(LFR(1,i)))*100;     
 end
 if saving
-    Saving(HFnormR,savefolder, Neonate, win,S)
+    Saving(HFnormR,savefolder, Neonate, win,Session,S)
 end
 disp(' -HFnormR calculated')
 
@@ -122,7 +122,7 @@ disp(' -HFnormR calculated')
 
 ratioLFHFR=cellfun(@(LFR,HFR) (LFR)/(HFR), LFR,HFR);
 if saving
-    Saving(ratioLFHFR,savefolder, Neonate, win,S)
+    Saving(ratioLFHFR,savefolder, Neonate, win,Session,S)
 end   
 disp(' -ratioLFHF calculated')
 
@@ -142,7 +142,7 @@ end
 MFR=cellfun(@sum,MFR_band,'UniformOutput',false);
 MFR(find([MFR{:}] == 0))={nan};  % 0 into nan
 if saving
-    Saving(MFR,savefolder, Neonate, win,S)
+    Saving(MFR,savefolder, Neonate, win,Session,S)
 end
 clearvars F
 disp(' -MFR calculated')
@@ -154,7 +154,7 @@ for i=1:length(MFR)
     MFnormR(i)=(cell2mat(MFR(1,i)))./(totpowR(1,i)-cell2mat(LFR(1,i)))*100;     
 end
 if saving
-    Saving(MFnormR,savefolder, Neonate, win,S)
+    Saving(MFnormR,savefolder, Neonate, win,Session,S)
 end
 disp(' -MFnormR calculated')
 
@@ -165,17 +165,17 @@ disp(' -MFnormR calculated')
 
 ratioMFHFR=cellfun(@(MFR,HFR) (MFR)/(HFR), MFR,HFR);
 if saving
-    Saving(ratioMFHFR,savefolder, Neonate, win,S)
+    Saving(ratioMFHFR,savefolder, Neonate, win,Session,S)
 end   
 disp(' -ratioMFHFR calculated')
 
 
 
 end
-    function Saving(Feature,savefolder, Neonate,win,S)
+    function Saving(Feature,savefolder, Neonate, win,Session,S)
         if exist('Feature','var')==1
             name=inputname(1); % variable name of function input
-            save([savefolder name '_Session_' num2str(S) '_pat_' num2str(Neonate)],'Feature')
+            save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
         else
             disp(['saving of ' name ' not possible'])
         end       

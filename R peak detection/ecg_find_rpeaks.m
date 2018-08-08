@@ -42,6 +42,15 @@ ecg_s_peak_idx   = zeros(1, num_beats);
 Nqrs           = fs*(50e-3);
 Nrec           = length(ecg);
 
+if num_beats<=20
+ecg_qr_slope_idx = [NaN];
+ecg_rs_slope_idx = [NaN];
+ecg_st_slope_idx = [NaN];
+ecg_r_peak_idx   = [NaN];
+ecg_s_peak_idx   = [NaN];    
+    
+else
+
 for i = 1:num_beats
     % Select the interval in which the RS slope is to be found
     if i < num_beats
@@ -50,29 +59,29 @@ for i = 1:num_beats
     else
         intv = rs_slope_idxs(rs_slope_start(i):end);
     end
-    
+
     % Determine the index at which the RS slope is steepest
     [tmp, min_idx]      = min(diff_ecg(intv));
     ecg_rs_slope_idx(i) = min_idx + intv(1) - 1;
-    
+
     % Determine the index at which the QR slope is steepest
     intv = (ecg_rs_slope_idx(i) - Nqrs) : ecg_rs_slope_idx(i);
     intv(intv<1) = [];
     [tmp, max_idx]      = max(diff_ecg(intv));
     ecg_qr_slope_idx(i) = max_idx + intv(1) - 1;
-    
+
     % Determine the index at which the ST slope is steepest
     intv = ecg_rs_slope_idx(i) : (ecg_rs_slope_idx(i) + Nqrs);
     intv(intv>Nrec) = [];
     [tmp, max_idx]      = max(diff_ecg(intv));
     ecg_st_slope_idx(i) = max_idx + intv(1) - 1;    
-    
+
     % Determine the maximum of the ECG in this interval 
     % to identify the R peak
     intv = ecg_qr_slope_idx(i) : ecg_rs_slope_idx(i);
     [tmp, max_idx] = max(ecg(intv));
     ecg_r_peak_idx(i) = max_idx + intv(1) - 1;
-    
+
     % Determine the minimum of the ECG in this interval 
     % to identify the S peak
     intv = ecg_rs_slope_idx(i) : ecg_st_slope_idx(i);
@@ -114,6 +123,9 @@ ecg_st_slope_idx(not_ok) = [];
 ecg_r_peak_idx(not_ok)   = [];
 ecg_s_peak_idx(not_ok)   = [];
 
+
+
+
 % Remove any spurious peaks
 nmin = round((60/hr_max)*fs);
 idx  = find(diff(ecg_r_peak_idx) < nmin, 1);
@@ -133,7 +145,7 @@ while(~isempty(idx))
     
     idx  = find(diff(ecg_r_peak_idx) < nmin, 1);
 end
-
+end %if num_beats<=20
 % Determine the beat-to-beat-intervals [ms] and BPM
 bbi_ecg = [nan, 1000*(diff(ecg_r_peak_idx))/fs];
 bpm_ecg = 60e3 ./ bbi_ecg;
