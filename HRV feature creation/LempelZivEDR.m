@@ -1,4 +1,4 @@
-function LempelZivEDR(RR,Neonate,saving,savefolder,win,Session,S) 
+function LempelZivEDR(EDR,Neonate,saving,savefolder,win,Session,S) 
 %Input
 
 
@@ -32,18 +32,18 @@ function LempelZivEDR(RR,Neonate,saving,savefolder,win,Session,S)
 type='exhaustive'; % exhaustive or primitive
 normalize=1 ;% 1 or 0
 
-if isrow(RR);  RR=RR'; end
+if isrow(EDR);  EDR=EDR'; end
 
-for i=1:length(RR)
-    if all(isnan(RR{i,1}))
+for i=1:length(EDR)
+    if all(isnan(EDR{i,1}))
         LZEDR{i,1}=nan;
         continue
     end
 %     RR{i,1}(isnan(RR{i,1}(1,:)))=[]; % this removes nans for the hilbert
-    if isnan(RR{i,1})
-        Hilberttimeseries=abs(hilbert(RR{i,1}(1:end,1))); % we use 2:end to avoide the nan at the beginning
+    if isnan(EDR{i,1})
+        Hilberttimeseries=abs(hilbert(EDR{i,1}(1:end,1))); % we use 2:end to avoide the nan at the beginning
     else
-         Hilberttimeseries=abs(hilbert(RR{i,1}));
+         Hilberttimeseries=abs(hilbert(EDR{i,1}));
     end
     thres=nanmean(Hilberttimeseries); % determine threshold from the hilbert time series
     Binarieinz=find(Hilberttimeseries>thres);
