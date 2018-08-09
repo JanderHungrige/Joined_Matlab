@@ -1,4 +1,4 @@
- function [SampEn,QSE,SEAUC,r_opt]=SampEn_QSE_SEAUC(RR,Neonate,saving,savefolder,win,faktor,Session,S)
+ function [SampEn,QSE,SEAUC,r_opt]=SampEn_QSE_SEAUC(RR,faktor)
 
 % #0 clc std 
 % #1 calculate matche sample Entropy (SempEn) with range of r from 0.05 to 0.3 *std (20% is in literatur but not always optimal) 
@@ -123,12 +123,12 @@ end
 
 
 
-if saving
+% if saving
 %     Saving(SampEn,savefolder,Neonate,win,Session,S) 
 %     Saving(QSE,savefolder,Neonate,win,Session,S) 
 %     Saving(SEAUC,savefolder,Neonate,win,Session,S)     
 %     Saving(r_opt,savefolder,Neonate,win,Session,S) %just to be able to compare later       
-end
+% end
 
 end
 %% Nested functions
@@ -282,13 +282,13 @@ end
 d = -log(A/B);
 end
 
-%% Nested saving
-    function Saving(Feature,savefolder, Neonate, win,Session,S)
-        if exist('Feature','var')==1
-            name=inputname(1); % variable name of function input
-            save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
-        else
-            disp(['saving of ' name ' not possible'])
-        end       
-    end
- 
+% %% Nested saving
+%     function Saving(Feature,savefolder, Neonate, win,Session,S)
+%         if exist('Feature','var')==1
+%             name=inputname(1); % variable name of function input
+%             save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
+%         else
+%             disp(['saving of ' name ' not possible'])
+%         end       
+%     end
+%  

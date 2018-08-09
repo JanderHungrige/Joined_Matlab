@@ -8,7 +8,7 @@
 % win=[60,120,180,240,300]; %window in seconds
 % overlap=[0.5,1];
 
-function [powerspectrum,f]=Lomb_scargel_single(RR,RR_idx,t,Neonate,saving,savefolder,win)  
+function [powerspectrum,f]=Lomb_scargel_single(RR,RR_idx,t)  
 if isrow(RR)
     RR=RR';
 end
@@ -48,25 +48,25 @@ end
 %                         pxx=pxx./maximum;
 %                         pxx=pxx/length(pxx);
 
-
-%%%%%%%%%%%% SAVING            
-if saving                     %saving R peaks positions in mat file                 
-    Saving(powerspectrum,savefolder,Neonate,win) 
-end% end if saving 
-
-
 end
-
-%% Nested saving
-    function Saving(Feature,savefolder, Neonate, win,Session,S)
-        if exist('Feature','var')==1
-            name=inputname(1); % variable name of function input
-            save([savefolder name '_win_' num2str(win)],'Feature')
-        else
-            disp(['saving of ' name ' not possible'])
-        end       
-    end
-                
+% %%%%%%%%%%%% SAVING            
+% if saving                     %saving R peaks positions in mat file                 
+%     Saving(powerspectrum,savefolder,Neonate,win) 
+% end% end if saving 
+% 
+% 
+% end
+% 
+% %% Nested saving
+%     function Saving(Feature,savefolder, Neonate, win,Session,S)
+%         if exist('Feature','var')==1
+%             name=inputname(1); % variable name of function input
+%             save([savefolder name '_win_' num2str(win)],'Feature')
+%         else
+%             disp(['saving of ' name ' not possible'])
+%         end       
+%     end
+%                 
 
  
  

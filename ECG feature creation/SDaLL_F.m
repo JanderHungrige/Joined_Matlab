@@ -1,4 +1,4 @@
-function SDaLL(ECG,t_ECG,Neonate,saving,savefolder,win,faktor,Session,S)  
+function SDaLL=SDaLL_F(ECG,t_ECG,faktor,win)  
 %Input
 % RR: 5min RR distance data
 % Neonate: Which patient
@@ -66,17 +66,17 @@ for N=1:length(SDaLL)
 end      
 
 %%%%%%%%%%%% SAVING            
-    if saving                     %saving R peaks positions in mat file                 
-       Saving(SDaLL,savefolder,Neonate,win,Session,S) 
-    end% end if saving    
-    
+%     if saving                     %saving R peaks positions in mat file                 
+%        Saving(SDaLL,savefolder,Neonate,win,Session,S) 
+%     end% end if saving    
+%     
 end
 %% Nested saving
-    function Saving(Feature,savefolder, Neonate, win,Session,S)
-        if exist('Feature','var')==1
-            name=inputname(1); % variable name of function input
-            save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
-        else
-            disp(['saving of ' name ' not possible'])
-        end       
-    end
+%     function Saving(Feature,savefolder, Neonate, win,Session,S)
+%         if exist('Feature','var')==1
+%             name=inputname(1); % variable name of function input
+%             save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
+%         else
+%             disp(['saving of ' name ' not possible'])
+%         end       
+%     end

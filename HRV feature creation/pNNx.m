@@ -1,4 +1,4 @@
-function pNNx(RR,Neonate,saving,savefolder,win,Session,S)
+function [pNN50,pNN30,pNN20,pNN10]=pNNx(RR)
 %Input
 % RR: 5min RR distance data
 % Neonate: Which patient
@@ -6,7 +6,7 @@ function pNNx(RR,Neonate,saving,savefolder,win,Session,S)
 % savefolder: Where to save
 % win: Duration of the HRV window. Comon is 5min/300s
 
-clearvars NN50 NN30 NN20 NN10 NN50 NN30 NN20 NN10 laenge
+clearvars  NN50 NN30 NN20 NN10 laenge
 
 
 %%%%%%%%%%%%%%AS
@@ -19,24 +19,16 @@ end
   for i=1:length(RR)            
 
           pNN50(1,i)=(sum(abs(diff(RR{i,1}))>=50)/length(RR{i,1}))*100;
-          if saving                     %saving R peaks positions in mat file                 
-             Saving(pNN50,savefolder,Neonate,win,Session,S) 
-          end% end if saving    
+ 
 
           pNN30(1,i)=(sum(abs(diff(RR{i,1}))>=30)/length(RR{i,1}))*100;
-          if saving                     %saving R peaks positions in mat file                 
-             Saving(pNN30,savefolder,Neonate,win,Session,S) 
-          end% end if saving   
+
 
           pNN20(1,i)=(sum(abs(diff(RR{i,1}))>=20)/length(RR{i,1}))*100;
-          if saving                     %saving R peaks positions in mat file                 
-             Saving(pNN20,savefolder,Neonate,win,Session,S) 
-          end% end if saving   
+  
 
           pNN10(1,i)=(sum(abs(diff(RR{i,1}))>=10)/length(RR{i,1}))*100;
-          if saving                     %saving R peaks positions in mat file                 
-             Saving(pNN10,savefolder,Neonate,win,Session,S) 
-          end% end if saving   
+  
   end
 
       
@@ -51,12 +43,12 @@ end
 end
     
 %% Nested saving
-    function Saving(Feature,savefolder, Neonate, win,Session,S)
-        if exist('Feature','var')==1
-            name=inputname(1); % variable name of function input
-            save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
-        else
-            disp(['saving of ' name ' not possible'])
-        end       
-    end
+%     function Saving(Feature,savefolder, Neonate, win,Session,S)
+%         if exist('Feature','var')==1
+%             name=inputname(1); % variable name of function input
+%             save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
+%         else
+%             disp(['saving of ' name ' not possible'])
+%         end       
+%     end
  

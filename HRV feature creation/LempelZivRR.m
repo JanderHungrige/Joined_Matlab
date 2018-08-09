@@ -1,4 +1,4 @@
-function LempelZivRR(RR,Neonate,saving,savefolder,win,Session,S) 
+function LZNN=LempelZivRR(RR) 
 %Input
 % RR: 5min RR distance data
 % Neonate: Which patient
@@ -73,23 +73,23 @@ LZNN(ix)={nan};
 
             
 %%%%%%%%%%%% SAVING            
-if saving                     %saving R peaks positions in mat file                 
-    Saving(LZNN,savefolder,Neonate,win,Session,S) 
-end% end if saving 
+% if saving                     %saving R peaks positions in mat file                 
+%     Saving(LZNN,savefolder,Neonate,win,Session,S) 
+% end% end if saving 
 
     
   
 end
 
-%% Nested saving
-    function Saving(Feature,savefolder, Neonate, win,Session,S)
-        if exist('Feature','var')==1
-            name=inputname(1); % variable name of function input
-            save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
-        else
-            disp(['saving of ' name ' not possible'])
-        end       
-    end
+% %% Nested saving
+%     function Saving(Feature,savefolder, Neonate, win,Session,S)
+%         if exist('Feature','var')==1
+%             name=inputname(1); % variable name of function input
+%             save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
+%         else
+%             disp(['saving of ' name ' not possible'])
+%         end       
+%     end
  
  
  

@@ -1,4 +1,4 @@
-function RMSSD(RR,Neonate,saving,savefolder,win,Session,S) 
+function RMSSD=RMSSD_F(RR) 
 %Input
 % RR: 5min RR distance data
 % Neonate: Which patient
@@ -29,23 +29,23 @@ end
 ix=cellfun(@isempty,RMSSD);
 RMSSD(ix)={nan};  
 
-
-%%%%%%%%%%%% SAVING            
-if saving                     %saving R peaks positions in mat file                 
-   Saving(RMSSD,savefolder,Neonate,win,Session,S) 
-end% end if saving 
-    
 end
-  
-
-%% Nested saving
-    function Saving(Feature,savefolder, Neonate, win,Session,S)
-        if exist('Feature','var')==1
-            name=inputname(1); % variable name of function input
-            save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
-        else
-            disp(['saving of ' name ' not possible'])
-        end       
-    end
- 
+% %%%%%%%%%%%% SAVING            
+% if saving                     %saving R peaks positions in mat file                 
+%    Saving(RMSSD,savefolder,Neonate,win,Session,S) 
+% end% end if saving 
+%     
+% end
+%   
+% 
+% %% Nested saving
+%     function Saving(Feature,savefolder, Neonate, win,Session,S)
+%         if exist('Feature','var')==1
+%             name=inputname(1); % variable name of function input
+%             save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
+%         else
+%             disp(['saving of ' name ' not possible'])
+%         end       
+%     end
+%  
  

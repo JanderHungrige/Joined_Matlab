@@ -1,4 +1,4 @@
-function meanarclength(ECG,t_ECG,Neonate,saving,savefolder,win,faktor,Session,S)  
+function aLL=meanarclength(ECG,t_ECG,faktor,win)  
 %Input
 % RR: 5min RR distance data
 % Neonate: Which patient
@@ -14,7 +14,7 @@ function meanarclength(ECG,t_ECG,Neonate,saving,savefolder,win,faktor,Session,S)
 [b,a] = butter(3,[0.09 0.29],'stop'); %bandstop with [] in Normalized Frequency x Pi rad/sample
 for L=1:length(ECG)
     ECG{1,L} = filtfilt(b,a,ECG{1,L}); %zero phase filter to get rid of QRS complex
-    [lineLength{1,L}] = arclength(t_ECG{1,L},(ECG{1,L}),'linear');
+    [LL{1,L}] = arclength(t_ECG{1,L},(ECG{1,L}),'linear');
 end
 % lineLength{1,1}=lineLength{1,2}; % due to nan, cannot be determined correctly. leaving nan ut still gives false result. rather copy next as they might be similar
 
@@ -23,27 +23,27 @@ Fenster=win/30; % 300/30= 10 parts a 30s => 5min
 
 % #2
 m=1;
-uebrig=length(lineLength);
+uebrig=length(LL);
 
-for k=1:win_jumps:length(lineLength)
-   if k+Fenster<length(lineLength) 
-       meanlineLength{1,m}=lineLength(1,k:k+Fenster-1); 
-   elseif k+Fenster>=length(lineLength) && win_jumps<=uebrig && k>win_jumps*(Fenster-(uebrig/win_jumps)*win_jumps)/win_jumps
+for k=1:win_jumps:length(LL)
+   if k+Fenster<length(LL) 
+       meanlineLength{1,m}=LL(1,k:k+Fenster-1); 
+   elseif k+Fenster>=length(LL) && win_jumps<=uebrig && k>win_jumps*(Fenster-(uebrig/win_jumps)*win_jumps)/win_jumps
        rechts=uebrig/win_jumps;% How many epochs are still left 
        links=(Fenster-rechts*win_jumps)/win_jumps; % how many epochs do we have to atahe from the left to get a full 300s window
-       meanlineLength{1,m}=lineLength(1,k-win_jumps*links:k+win_jumps*rechts-1);
+       meanlineLength{1,m}=LL(1,k-win_jumps*links:k+win_jumps*rechts-1);
    elseif k+Fenster>=length(ECG) &&  win_jumps>uebrig && k>win_jumps*(Fenster-(uebrig/win_jumps)*win_jumps)/win_jumps
        rechts=uebrig/win_jumps;% How many epochs are still left 
        links=(Fenster-rechts*win_jumps)/win_jumps; % how many epochs do we have to atahe from the left to get a full 300s window      
-       meanlineLength{1,m}=lineLength(1,k-win_jumps*links:end);
+       meanlineLength{1,m}=LL(1,k-win_jumps*links:end);
    else % if there is to little data
        rechts=uebrig/win_jumps;% How many epochs are still left 
        links=(Fenster-rechts*win_jumps)/win_jumps; % how many epochs do we have to atahe from the left to get a full 300s window                    
-       meanlineLength{1,m}=lineLength(1,k:end);
+       meanlineLength{1,m}=LL(1,k:end);
        
 %            break       % if you want to end with the same length for the clast cell elementas the others use break. But than the ECG_win_300 is one element shorter thatn ECG_win_30    
    end
-   uebrig=length(lineLength)-(k+win_jumps);  % how many minutes are left           
+   uebrig=length(LL)-(k+win_jumps);  % how many minutes are left           
    m=m+1;
 end
 
@@ -63,20 +63,21 @@ end
 for N=1:length(meanlineLength)
    meanlineLength{1,N}=nanmean(cell2mat(meanlineLength{1,N}));
 end
-
-%%%%%%%%%%%% SAVING            
-if saving                     %saving R peaks positions in mat file                 
-   Saving(meanlineLength,savefolder,Neonate,win,Session,S) 
-end% end if saving    
-
+aLL=meanlineLength;
 end
-%% Nested saving
-    function Saving(Feature,savefolder, Neonate, win,Session,S)
-        if exist('Feature','var')==1
-            name=inputname(1); % variable name of function input
-            save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
-        else
-            disp(['saving of ' name ' not possible'])
-        end       
-    end
+% %%%%%%%%%%%% SAVING            
+% if saving                     %saving R peaks positions in mat file                 
+%    Saving(meanlineLength,savefolder,Neonate,win,Session,S) 
+% end% end if saving    
+% 
+% end
+% %% Nested saving
+%     function Saving(Feature,savefolder, Neonate, win,Session,S)
+%         if exist('Feature','var')==1
+%             name=inputname(1); % variable name of function input
+%             save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
+%         else
+%             disp(['saving of ' name ' not possible'])
+%         end       
+%     end
 

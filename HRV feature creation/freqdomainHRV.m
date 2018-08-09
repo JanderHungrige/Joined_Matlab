@@ -1,4 +1,4 @@
-function freqdomainHRV (powerspectrum,f,Neonate,win,saving,savefolder,Session,S)
+function [totpow,VLF,LF,LFnorm,HF,HFnorm,ratioLFHF,sHF,sHFnorm,uHF,uHFnorm]= freqdomainHRV (powerspectrum,f)
 
 
 
@@ -38,9 +38,6 @@ for l=1:length(powerspectrum)
         totpow(totpow==0)=nan; %all zeroes to nan to avoid confusion between AS and QS
     end
 end
-if saving
-    Saving(totpow,savefolder, Neonate, win,Session,S)
-end
 disp(' -totpow calculated')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% VLF power in very low frequency range (adult 0.003-0.04 Hz)
@@ -58,9 +55,6 @@ for l=1:length(powerspectrum)
 end
 VLF=cellfun(@sum,VLF_band,'UniformOutput',false);
 VLF(find([VLF{:}] == 0))={nan};  % 0 into nan
-if saving
-    Saving(VLF,savefolder, Neonate, win,Session,S)
-end
 clearvars F
 disp(' -VLF calculated')
 
@@ -80,9 +74,6 @@ for l=1:length(powerspectrum)
 end
 LF=cellfun(@sum,LF_band,'UniformOutput',false);
 LF(find([LF{:}] == 0))={nan};  % 0 into nan
-if saving
-    Saving(LF,savefolder, Neonate, win,Session,S)
-end
 clearvars F
 disp(' -LF calculated')
 
@@ -93,9 +84,7 @@ disp(' -LF calculated')
 for i=1:length(LF)
     LFnorm(i)=((cell2mat(LF(1,i)))./(totpow(1,i)-cell2mat(VLF(1,i))))*100; % before LFnorm_AS=((cell2mat(LF_AS))./totpowAS)*100;
 end
-if saving
-    Saving(LFnorm,savefolder, Neonate, win,Session,S)
-end
+
         
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% HF power in high frequency range (adult 0.15-0.4 Hz)
@@ -112,9 +101,7 @@ for l=1:length(powerspectrum)
 end
 HF=cellfun(@sum,HF_band,'UniformOutput',false);
 HF(find([HF{:}] == 0))={nan};  % 0 into nan
-if saving
-    Saving(HF,savefolder, Neonate, win,Session,S)
-end
+
 clearvars F
 disp(' -HF calculated')
 
@@ -124,19 +111,12 @@ disp(' -HF calculated')
 for i=1:length(HF)
     HFnorm(i)=((cell2mat(HF(1,i)))./(totpow(1,i)-cell2mat(VLF(1,i))))*100;     
 end
-if saving
-    Saving(HFnorm,savefolder, Neonate, win,Session,S)
-end
 disp(' -HFnorm calculated')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% LF/HF Ratio LF/HF 
     
-
 ratioLFHF=cellfun(@(LF,HF) (LF)/(HF), LF,HF);
-if saving
-    Saving(ratioLFHF,savefolder, Neonate, win,Session,S)
-end   
 disp(' -ratioLFHF calculated')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -154,9 +134,7 @@ for l=1:length(powerspectrum)
 end
 sHF=cellfun(@sum,sHF_band,'UniformOutput',false);
 sHF(find([sHF{:}] == 0))={nan};  % 0 into nan
-if saving
-    Saving(sHF,savefolder, Neonate, win,Session,S)
-end
+
 clearvars F
 disp(' -sHF calculated')
        
@@ -166,9 +144,7 @@ disp(' -sHF calculated')
 for i=1:length(sHF)
     sHFnorm(i)=((cell2mat(sHF(1,i)))./(totpow(1,i)-cell2mat(VLF(1,i))))*100;     
 end
-if saving
-    Saving(sHFnorm,savefolder, Neonate, win,Session,S)
-end
+
 disp(' -shFnorm calculated')
 
 
@@ -187,9 +163,7 @@ for l=1:length(powerspectrum)
 end
 uHF=cellfun(@sum,uHF_band,'UniformOutput',false);
 uHF(find([uHF{:}] == 0))={nan};  % 0 into nan
-if saving
-    Saving(uHF,savefolder, Neonate, win,Session,S)
-end
+
 disp(' -uHF calculated')
 
 
@@ -201,21 +175,19 @@ clearvars F
 for i=1:length(uHF)
     uHFnorm(i)=((cell2mat(uHF(1,i)))./(totpow(1,i)-cell2mat(VLF(1,i))))*100;     
 end
-if saving
-    Saving(uHFnorm,savefolder, Neonate, win,Session,S)
-end
+
 disp(' -uHFnorm calculated')
 
 
 
 end
 %% Nested saving
-    function Saving(Feature,savefolder, Neonate, win,Session,S)
-        if exist('Feature','var')==1
-            name=inputname(1); % variable name of function input
-            save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
-        else
-            disp(['saving of ' name ' not possible'])
-        end       
-    end
- 
+%     function Saving(Feature,savefolder, Neonate, win,Session,S)
+%         if exist('Feature','var')==1
+%             name=inputname(1); % variable name of function input
+%             save([savefolder name '_Session_' num2str(S) '_win_' num2str(win) '_' Session],'Feature')
+%         else
+%             disp(['saving of ' name ' not possible'])
+%         end       
+%     end
+%  

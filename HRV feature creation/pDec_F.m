@@ -1,4 +1,4 @@
-function BpE=Beats_per_Epoch(RR)
+function pDEC=pDec_F(RR) 
 %Input
 % RR: 5min RR distance data
 % Neonate: Which patient
@@ -6,27 +6,29 @@ function BpE=Beats_per_Epoch(RR)
 % savefolder: Where to save
 % win: Duration of the HRV window. Comon is 5min/300s
 
- 
-
-    
-%%%%%%%%%%%% Calc BpE    
-
-%     BpE=cell(3,length(RR));
-    for K=1:length(RR)
-        if isempty(RR{K,1})==0 && all(isnan(RR{K,1}))==0
-            BpE{1,K}=length(RR{K,1})-1; %-1 as first is nan
-        else
-            BpE{1,K}=NaN;
-        end
+for i=1:length(RR)
+    if all(isnan(RR{i,1}))
+        pDEC{i,1}=nan;
+        continue
     end
+    pDEC{1,i}=sum(RR{i,1}>nanmean(RR{i,1}))/numel(RR{i,1})*100;
 end
-%    
-% %%%%%%%%%%%% SAVING            
-%     if saving                     %saving R peaks positions in mat file                 
-%        Saving(BpE,savefolder,Neonate,win,Session,S) 
-%     end% end if saving  
+    
+
+%%%%%%%%%%%%replace [] with nan
+ix=cellfun(@isempty,pDEC);
+pDEC(ix)={0};  
+end
+            
+%%%%%%%%%%%% SAVING            
+% if saving                     %saving R peaks positions in mat file                 
+%     Saving(pDEC,savefolder,Neonate,win,Session,S) 
+% end% end if saving 
+% 
 %     
-% end    
+%   
+% end
+% 
 % %% Nested saving
 %     function Saving(Feature,savefolder, Neonate, win,Session,S)
 %         if exist('Feature','var')==1
@@ -36,3 +38,7 @@ end
 %             disp(['saving of ' name ' not possible'])
 %         end       
 %     end
+%  
+ 
+ 
+
