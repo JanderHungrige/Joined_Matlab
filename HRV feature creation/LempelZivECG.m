@@ -38,24 +38,34 @@ normalize=1 ;% 1 or 0
 if isrow(ECG);  ECG=ECG'; end
 % down sampling to 20Hz
 for i=1:length(ECG)
-    ECG{1,i}=downsample(ECG{1,i},500/20);
+    ECG{i,1}=downsample(ECG{i,1},500/20);
 end
 
 
 for i=1:length(ECG)
-    if all(isnan(ECG{1,i}))
+    if all(isnan(ECG{i,1}))
         LZECG{i,1}=nan;
         continue
     end
-    ECG{1,i}(isnan(ECG{1,i}(:,1)))=[]; % this removes nans for the hilbert
-    if isnan(ECG{i,1})
-        Hilberttimeseries=abs(hilbert(ECG{i,1}(1:end,1))); % we use 2:end to avoide the nan at the beginning
+    ECG{i,1}(isnan(ECG{i,1}(:,1)))=[]; % this removes nans for the hilbert
+    if isnan(ECG{i,1}(1,1))
+        Hilberttimeseries=abs(hilbert(ECG{i,1}(2:end,1))); % we use 2:end to avoide the nan at the beginning
     else
+%          ECG{i,1}(isnan(ECG{i,1}(1,:)))=[]; % this removes nans for the hilbert        
          Hilberttimeseries=abs(hilbert(ECG{i,1}));
     end
     thres=nanmean(Hilberttimeseries); % determine threshold forom the hilbert time series
     Binarieinz=find(Hilberttimeseries>thres);
     Binarinull=find(Hilberttimeseries<thres);
+    if isrow(Binarieinz)
+        Binarieinz=Binarieinz';
+    end
+    if isrow(Binarinull)
+        Binarinull=Binarinull';
+    end
+    if isrow(Hilberttimeseries)
+        Hilberttimeseries=Hilberttimeseries';
+    end       
     Hilberttimeseries(Binarieinz,1)=1; 
     Hilberttimeseries(Binarinull,1)=0;
     Hilbertsrting = binary_seq_to_string(Hilberttimeseries);

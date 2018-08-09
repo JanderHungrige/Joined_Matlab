@@ -35,7 +35,7 @@ dim=2;
 tau=1;
 nancounter=0; % counting the nans
 % fact=0.01:0.01:0.70; % the threshold r 5%*sdt to 50%*std in 5% steps
-r=0.1:0.1:15; %tollereance in ms
+r=0.1:0.3:15; %tollereance in ms vorher 0.1,0.1,15
 for j=1:length(RR)
     if all(isnan(RR{j,1}))==0
         if isnan(RR{j,1}(1,1))

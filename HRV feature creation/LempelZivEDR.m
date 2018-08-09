@@ -39,15 +39,24 @@ for i=1:length(EDR)
         LZEDR{i,1}=nan;
         continue
     end
-%     RR{i,1}(isnan(RR{i,1}(1,:)))=[]; % this removes nans for the hilbert
-    if isnan(EDR{i,1})
-        Hilberttimeseries=abs(hilbert(EDR{i,1}(1:end,1))); % we use 2:end to avoide the nan at the beginning
+    if isnan(EDR{i,1}(1,1))
+        Hilberttimeseries=abs(hilbert(EDR{i,1}(2:end,1))); % we use 2:end to avoide the nan at the beginning
     else
+%          EDR{i,1}(isnan(EDR{i,1}(1,:)))=[]; % this removes nans for the hilbert        
          Hilberttimeseries=abs(hilbert(EDR{i,1}));
     end
     thres=nanmean(Hilberttimeseries); % determine threshold from the hilbert time series
     Binarieinz=find(Hilberttimeseries>thres);
     Binarinull=find(Hilberttimeseries<thres);
+    if isrow(Binarieinz)
+        Binarieinz=Binarieinz';
+    end
+    if isrow(Binarinull)
+        Binarinull=Binarinull';
+    end    
+    if isrow(Hilberttimeseries)
+        Hilberttimeseries=Hilberttimeseries';
+    end       
     Hilberttimeseries(Binarieinz,1)=1; 
     Hilberttimeseries(Binarinull,1)=0;
     Binstring = binary_seq_to_string(Hilberttimeseries);
