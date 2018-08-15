@@ -25,6 +25,7 @@
 clear
 clc
 tic
+RRMethod='R'; %M or R if Michiels or Ralphs RR peak detection method was used 
 dataset='MMC'; % ECG or cECG or MMC or InnerSense.
 saving=1;
 win=30; % window of annotations. 30 precicse, 300 smoothed
@@ -37,11 +38,9 @@ if strcmp('ECG',dataset) || strcmp('cECG',dataset)
         datapath='D:\PhD\Article_3_(cECG)\';
         datapathload=[ datapath 'Processed data\'];
         datapath=[datapath 'Processed data\HRV_features\'];
-        loadfolderAnnotation= [datapathload 'Annotations\'];
-%     elseif strcmp('cECG',dataset)
-%         datapath='E:\cECG_study\C_Processed_Data\cHRV_features\';    
-%         datapathload=datapath;
-%         loadfolderAnnotation= [datapathload 'Annotations\'];
+    elseif strcmp('cECG',dataset)
+        datapath='E:\cECG_study\C_Processed_Data\cHRV_features\';    
+        datapathload=datapath;
     end
     
 elseif strcmp('MMC',dataset) 
@@ -50,36 +49,39 @@ elseif strcmp('MMC',dataset)
     datapath='D:\PhD\Article_4_(MMC)\';
     datapathload=[ datapath 'Processed data\'];
     datapath=[datapath 'Processed data\HRV_features\'];
-    loadfolderAnnotation= [datapathload 'Annotations\'];
 
 elseif strcmp('InnerSense',dataset) 
     Pat=[3,4,5,6,7,9,13,15];
     datapath='D:\PhD\Article_2_(EHV)\';
     datapathload=[ datapath 'Processed data\'];
     datapath=[datapath 'Processed data\HRV_features\'];
-    loadfolderAnnotation= [datapathload 'Annotations\'];
 end 
 
 if  strcmp('ECG',dataset) || strcmp('MMC',dataset) || strcmp('InnerSense',dataset)
-    savefolder= ([datapathload '\Matrices\']);
-    savefolderSession=([datapathload '\Matrices\Sessions\']);    
+    savefolder= ([datapath '\Matrices\']);
+    savefolderSession=([datapath '\Matrices\Sessions\']);    
 
 elseif strcmp('cECG',dataset)==1
-    savefolder= ([ datapathload '\DNN-Matrices\cMatrices'  '\']);
-    savefolderSession=([ datapathload 'DNN-Matrices\cMatrices'  '\Sessions\']);    
+    savefolder= ([ datapath '\DNN-Matrices\cMatrices'  '\']);
+    savefolderSession=([ datapath 'DNN-Matrices\cMatrices'  '\Sessions\']);    
 end
 
 TFeature_path=[datapath 'timedomain\'];
 FFeature_path=[datapath 'freqdomain\'];
 NLFeature_path=[datapath 'nonlinear\'];  
-AWFeature_path=[datapath 'weigthAge\'];
+AGFeature_path=[datapath 'weigthAge\'];
 
+loadfolderAnnotation= [datapathload 'Annotations\'];
 
-if (exist(savefolder))==0;  mkdir([savefolder]);end
-if (exist(savefolderSession))==0;  mkdir([savefolderSession]);end
+if (exist(savefolder) )==0;  mkdir([savefolder]);end
+if (exist(savefolderSession) )==0;  mkdir([savefolderSession]);end
 
 
    Featurenames_time={...
+        'ECG';...
+        'HRV';...
+        'EDR' ;...
+        'Resp';...
         'BpE';...
         'LL';...
         'aLL';...
@@ -130,9 +132,9 @@ if (exist(savefolderSession))==0;  mkdir([savefolderSession]);end
     
     Featurenames_AgeWeight={...
         'Age_diff';...
-        'Birthweight';...
-        'CA';...
-        'GA';...
+        'Birthweight'...
+        'CA'...
+        'GA'...
         };
     
 for N=1:length(Pat)
@@ -146,20 +148,20 @@ for N=1:length(Pat)
     
     
     if strcmp('ECG',dataset) || strcmp('cECG',dataset)
-        namefill=['_Session_*_win_' num2str(win) '_*_'  num2str(Neonate) '.mat'];
-        namefillT=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
-        namefillF=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
-        namefillNL=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
-        namefillAW=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
-        namefillAnnot1=['_win_' num2str(win) '_Intellivue_*_' num2str(Neonate) '.mat'];
+        searchdiretory=['_Session_*_win_' num2str(win) '_*_'  num2str(Neonate) '.mat'];
+        searchdiretoryT=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
+        searchdiretoryF=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
+        searchdirectoryNL=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
+        searchdirectoryAW=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
+        searchdirectoryA1=['_win_' num2str(win) '_Intellivue_*_' num2str(Neonate) '.mat'];
     elseif strcmp('MMC',dataset) || strcmp('InnerSense',dataset)  
 %         searchdiretory=['_Session_*_win_' num2str(win) '_'  num2str(Neonate) '.mat'];
-        namefill  = ['_win_' num2str(win) '_' num2str(Neonate) '.mat'];
-        namefillT = ['_win_' num2str(win) '_' num2str(Neonate) '.mat'];
-        namefillF = ['_win_' num2str(win) '_' num2str(Neonate) '.mat'];
-        namefillNL=['_win_' num2str(win) '_' num2str(Neonate) '.mat'];
-        namefillAW=['_win_' num2str(win) '_' num2str(Neonate) '.mat']; 
-        namefillAnnot2=[loadfolderAnnotation 'Annotations_win_' num2str(win) '_' num2str(Neonate) '.mat'];    
+        searchdiretory  = ['_win_' num2str(win) '_' num2str(Neonate) '.mat'];
+        searchdiretoryT = ['_win_' num2str(win) '_' num2str(Neonate) '.mat'];
+        searchdiretoryF = ['_win_' num2str(win) '_' num2str(Neonate) '.mat'];
+        searchdirectoryNL=['_win_' num2str(win) '_' num2str(Neonate) '.mat'];
+        searchdirectoryAW=['_win_' num2str(win) '_' num2str(Neonate) '.mat'];        
+        searchdirectoryA2=[loadfolderAnnotation 'Annotations_win_' num2str(win) '_' num2str(Neonate) '.mat'];    
     end
 
 %--------------- Per Patient ---------------     
@@ -169,15 +171,15 @@ for N=1:length(Pat)
 %#4 Merge Feature Sessions together or safe them as session
 
 
-    Sessionnames=dir([TFeature_path Featurenames_time{1,1} namefill]); 
+    Sessionnames=dir([TFeature_path Featurenames_time{1,1} searchdiretory]); 
     Sessionlength=length(cellfun('isempty',{Sessionnames.name}));
 
     for i=1:Sessionlength  
         disp(['Session ' num2str(i) '/' num2str(Sessionlength)])
         if strcmp('ECG',dataset) || strcmp('cECG',dataset)
-            dateiname=dir([loadfolderAnnotation 'Annotations_Session_' num2str(i) namefillAnnot1]);
+            dateiname=dir([loadfolderAnnotation 'Annotations_Session_' num2str(i) searchdirectoryA1]);
         elseif strcmp('MMC',dataset) || strcmp('InnerSense',dataset) 
-            dateiname=dir(namefillAnnot2);
+            dateiname=dir(searchdirectoryA2);
         end
         load([loadfolderAnnotation dateiname.name]);
 
@@ -186,13 +188,13 @@ for N=1:length(Pat)
 % all from one patient TIME DOMAIN
         for j=1:length(Featurenames_time) 
             if strcmp('ECG',dataset) || strcmp('cECG',dataset)
-                dateiname=dir([TFeature_path Featurenames_time{j,1} '_Session_' num2str(i) namefillT]);
+                dateiname=dir([TFeature_path Featurenames_time{j,1} '_Session_' num2str(i) searchdiretoryT]);
             elseif strcmp('MMC',dataset) || strcmp('InnerSense',dataset)
-                dateiname=dir([TFeature_path Featurenames_time{j,1}  namefillT]);
+                dateiname=dir([TFeature_path Featurenames_time{j,1}  searchdiretoryT]);
             end
             
             load([TFeature_path dateiname.name])
-            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
+            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations) ;
              
         end
         tmp2=[tmp2,tmp]; % Adding the long single line of Feature into the Feature Matrix, where each row is one Feature        
@@ -201,9 +203,9 @@ for N=1:length(Pat)
 % all from on patient FREQUENCY DOMAIN
         for j=1:length(Featurenames_frequency)
             if strcmp('ECG',dataset) || strcmp('cECG',dataset)
-                dateiname=dir([FFeature_path Featurenames_frequency{j,1} '_Session_' num2str(i) namefillF]);
+                dateiname=dir([FFeature_path Featurenames_frequency{j,1} '_Session_' num2str(i) searchdiretoryF]);
             elseif strcmp('MMC',dataset) || strcmp('InnerSense',dataset)
-                dateiname=dir([FFeature_path Featurenames_frequency{j,1}  namefillF]);
+                dateiname=dir([FFeature_path Featurenames_frequency{j,1}  searchdiretoryF]);
             end            
             
             load([FFeature_path dateiname.name]);
@@ -216,13 +218,13 @@ for N=1:length(Pat)
 % all from on patient NONELINEAR    
         for j=1:length(Featurenames_nonlinear) 
             if strcmp('ECG',dataset) || strcmp('cECG',dataset)
-                dateiname=dir([NLFeature_path Featurenames_nonlinear{j,1} '_Session_' num2str(i) namefillNL]);
+                dateiname=dir([NLFeature_path Featurenames_nonlinear{j,1} '_Session_' num2str(i) searchdiretoryNL]);
             elseif strcmp('MMC',dataset) || strcmp('InnerSense',dataset)
-                dateiname=dir([NLFeature_path Featurenames_nonlinear{j,1}  namefillNL]);
+                dateiname=dir([NLFeature_path Featurenames_nonlinear{j,1}  searchdiretoryNL]);
             end              
         
             load([NLFeature_path dateiname.name])
-            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
+            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations) ;
                    
         end
         tmp4=[tmp4 ,tmp]; % Adding the long single line of Feature into the Feature Matrix, where each row is one Feature
@@ -233,11 +235,11 @@ for N=1:length(Pat)
             if strcmp('ECG',dataset) || strcmp('cECG',dataset)
                 dateiname=dir([AWFeature_path Featurenames_AgeWeight{j,1} '_Session_' num2str(i) searchdiretoryAW]);
             elseif strcmp('MMC',dataset) || strcmp('InnerSense',dataset)
-                dateiname=dir([AWFeature_path Featurenames_AgeWeight{j,1}  namefillT]);
+                dateiname=dir([AWFeature_path Featurenames_AgeWeight{j,1}  searchdiretoryT]);
             end              
         
-            load([AWFeature_path dateiname.name])            
-            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
+            load([NLFeature_path dateiname.name])            
+            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations) ;
              
         end
         tmp5=[tmp5 ,tmp]; % Adding the long single line of Feature into the Feature Matrix, where each row is one Feature
