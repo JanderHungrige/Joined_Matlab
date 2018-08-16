@@ -29,7 +29,11 @@
 % end
 %
 % #1
-if isrow (RR); RR=RR'; end
+if isrow (RR); RR=RR'; 
+    for i=1:length(RR)
+        RR{i}=RR{i}';
+    end
+end
 
 dim=2; 
 tau=1;

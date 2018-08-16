@@ -32,7 +32,11 @@ function LZEDR=LempelZivEDR(EDR)
 type='exhaustive'; % exhaustive or primitive
 normalize=1 ;% 1 or 0
 
-if isrow(EDR);  EDR=EDR'; end
+if isrow(EDR);  EDR=EDR';
+    for i=1:length(EDR)
+        EDR{i}=EDR{i}';
+    end
+end
 
 for i=1:length(EDR)
     if all(isnan(EDR{i,1}))
