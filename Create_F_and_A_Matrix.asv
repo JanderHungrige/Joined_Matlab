@@ -37,7 +37,7 @@ if strcmp('ECG',dataset) || strcmp('cECG',dataset)
         if strcmp(systeminuse,'c3po')
             datapath='D:\PhD\Article_3_(cECG)\';
         elseif strcmp(systeminuse,'Philips')
-            datapath='C:\Users\310122653\Documents\PhD\Article_3_(cECG)\';
+            datapath='D:\PhD\Article_3_(cECG)\';
         end                    
         datapathload=[ datapath 'Processed data\'];
         datapath=[datapath 'Processed data\HRV_features\'];
@@ -51,22 +51,14 @@ if strcmp('ECG',dataset) || strcmp('cECG',dataset)
 elseif strcmp('MMC',dataset) 
     PatientID=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]; % core. Show all patients in the folder
     Pat=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
-    if strcmp(systeminuse,'c3po')
-        datapath='D:\PhD\Article_4_(MMC)\';
-    elseif strcmp(systeminuse,'Philips')
-        datapath='C:\Users\310122653\Documents\PhD\Article_4_(MMC)\';
-    end
+    datapath='D:\PhD\Article_4_(MMC)\';
     datapathload=[ datapath 'Processed data\'];
     datapath=[datapath 'Processed data\HRV_features\'];
     loadfolderAnnotation= [datapathload 'Annotations\'];
 
 elseif strcmp('InnerSense',dataset) 
     Pat=[3,4,5,6,7,9,13,15];
-    if strcmp(systeminuse,'c3po')
-        datapath='D:\PhD\Article_2_(EHV)\';
-    elseif strcmp(systeminuse,'Philips')
-        datapath='C:\Users\310122653\Documents\PhD\Article_2_(EHV)';
-    end        
+    datapath='D:\PhD\Article_2_(EHV)\';
     datapathload=[ datapath 'Processed data\'];
     datapath=[datapath 'Processed data\HRV_features\'];
     loadfolderAnnotation= [datapathload 'Annotations\'];

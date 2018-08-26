@@ -16,6 +16,10 @@ function SDaLL=SDaLL_F(ECG,t_ECG,faktor,win)
 
 % #1
 [b,a] = butter(3,[0.09 0.29],'stop'); %bandstop with [] in Normalized Frequency x Pi rad/sample
+if iscolumn(ECG)
+    ECG=ECG';
+end
+
 for L=1:length(ECG)
     ECG{1,L} = filtfilt(b,a,ECG{1,L}); %zero phase filter to get rid of QRS complex
     [lineLength{1,L}] = arclength(t_ECG{1,L},(ECG{1,L}),'linear');
