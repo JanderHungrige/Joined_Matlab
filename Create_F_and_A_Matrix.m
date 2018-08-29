@@ -27,7 +27,7 @@ clc
 tic
 dataset='MMC'; % ECG or cECG or MMC or InnerSense.
 saving=1;
-win=30; % window of annotations. 30 precicse, 300 smoothed
+win=300; % window of annotations. 30 precicse, 300 smoothed
 systeminuse='Philips';
 
 if strcmp('ECG',dataset) || strcmp('cECG',dataset)
@@ -135,9 +135,9 @@ if (exist(savefolderSession))==0;  mkdir([savefolderSession]);end
         'LZNN';...
         'LZECG';... 
         'LZEDR';...
-%         'QSE_EDR';...
-%         'SampEn_EDR';...
-%         'SEAUC_EDR';...
+        'QSE_EDR';...
+        'SampEn_EDR';...
+        'SEAUC_EDR';...
         };
     
     Featurenames_AgeWeight={...
@@ -249,7 +249,8 @@ for N=1:length(Pat)
             end              
         
             load([AWFeature_path dateiname.name])            
-            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
+            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp);
+            tmp=cellfun(@(x) x/10,tmp,'un',0); % We need to have vlaues between 0 and 1 else the z score destroys the values. So we use 0.1 - 0.4 instead of 1-4 for the age features
              
         end
         tmp5=[tmp5 ,tmp]; % Adding the long single line of Feature into the Feature Matrix, where each row is one Feature
@@ -272,6 +273,8 @@ for N=1:length(Pat)
             FeatureMatrix{fm} = FeatureMatrix{fm}(~isnan(FeatureMatrix{fm}),:) ;            
         end
         FMtmp=cell2mat(FeatureMatrix);
+        
+        
         
         %STANDARD SCALE WITH Z-SCORE
         for zs=1:size(FMtmp,1)
