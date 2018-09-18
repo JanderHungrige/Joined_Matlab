@@ -16,6 +16,7 @@
 
 
 %#1 How many sessions?
+%     
 %#2 Go through each session and load all Featrues and the annotation
 %#3 Cut annotation and Feature to the same length
 %#4 Save each combination as Session in multile matrices
@@ -25,10 +26,10 @@
 clear
 clc
 tic
-dataset='MMC'; % ECG or cECG or MMC or InnerSense.
+dataset='InnerSense'; % ECG or cECG or MMC or InnerSense.
 saving=1;
 win=300; % window of annotations. 30 precicse, 300 smoothed
-systeminuse='Philips';
+systeminuse='c3po';
 
 if strcmp('ECG',dataset) || strcmp('cECG',dataset)
     Pat=[4,5,6,7,9,10,11,12,13];
@@ -135,9 +136,9 @@ if (exist(savefolderSession))==0;  mkdir([savefolderSession]);end
         'LZNN';...
         'LZECG';... 
         'LZEDR';...
-        'QSE_EDR';...
-        'SampEn_EDR';...
-        'SEAUC_EDR';...
+%         'QSE_EDR';...
+%         'SampEn_EDR';...
+%         'SEAUC_EDR';...
         };
     
     Featurenames_AgeWeight={...
@@ -163,7 +164,9 @@ for N=1:length(Pat)
         namefillF=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
         namefillNL=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
         namefillAW=['_win_' num2str(win) '_*_' num2str(Neonate) '.mat'];
-        namefillAnnot1=['_win_' num2str(win) '_Intellivue_*_' num2str(Neonate) '.mat'];
+%         namefillAnnot1=['_win_' num2str(win) '_Intellivue_*_' num2str(Neonate) '.mat'];
+        namefillAnnot1=['_pat_' num2str(Neonate) '.mat'];
+        
     elseif strcmp('MMC',dataset) || strcmp('InnerSense',dataset)  
 %         searchdiretory=['_Session_*_win_' num2str(win) '_'  num2str(Neonate) '.mat'];
         namefill  = ['_win_' num2str(win) '_' num2str(Neonate) '.mat'];
@@ -183,6 +186,10 @@ for N=1:length(Pat)
 
     Sessionnames=dir([TFeature_path Featurenames_time{1,1} namefill]); 
     Sessionlength=length(cellfun('isempty',{Sessionnames.name}));
+    
+    if isempty(Sessionnames)
+        error('Sessionlength is empty. Probably false name defenition')
+    end
 
     for i=1:Sessionlength  
         disp(['Session ' num2str(i) '/' num2str(Sessionlength)])
@@ -243,9 +250,9 @@ for N=1:length(Pat)
 % all from on patient AGE domain    
         for j=1:length(Featurenames_AgeWeight) 
             if strcmp('ECG',dataset) || strcmp('cECG',dataset)
-                dateiname=dir([AWFeature_path Featurenames_AgeWeight{j,1} '_Session_' num2str(i) searchdiretoryAW]);
+                dateiname=dir([AWFeature_path Featurenames_AgeWeight{j,1} '_Session_' num2str(i) namefillAW]);
             elseif strcmp('MMC',dataset) || strcmp('InnerSense',dataset)
-                dateiname=dir([AWFeature_path Featurenames_AgeWeight{j,1}  namefillT]);
+                dateiname=dir([AWFeature_path Featurenames_AgeWeight{j,1}  namefillAW]);
             end              
         
             load([AWFeature_path dateiname.name])            
@@ -268,7 +275,7 @@ for N=1:length(Pat)
         Annotations(:,c)=[];
         clearvars c
         % remove all nans from each cell, as there are mostly less nans than 30s, it just
-        % reduces the first epoch. Deleting nans as the standart scaler of Python cannot handle nans
+        % reduces the first epoch. Deleting nans as the standard scaler of Python cannot handle nans
         for fm = 1:numel(FeatureMatrix)
             FeatureMatrix{fm} = FeatureMatrix{fm}(~isnan(FeatureMatrix{fm}),:) ;            
         end

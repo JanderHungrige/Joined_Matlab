@@ -42,7 +42,7 @@ for i=1:length(powerspectrum)
     end
 end
 totpowR=cellfun(@sum,totpowR_band,'UniformOutput',false);
-totpowR(find([totpowR{:}] == 0))={nan};  % 0 into nan
+% totpowR(find([totpowR{:}] == 0))={nan};  % 0 into nan
 totpowR=cell2mat(totpowR); %LAAAAAASSSSST entry
 
 clearvars F
@@ -63,7 +63,7 @@ for i=1:length(powerspectrum)
     end
 end
 LFR=cellfun(@sum,LFR_band,'UniformOutput',false);
-LFR(find([LFR{:}] == 0))={nan};  % 0 into nan
+% LFR(find([LFR{:}] == 0))={nan};  % 0 into nan
 
 clearvars F
 disp(' -LFR calculated')
@@ -89,7 +89,7 @@ for i=1:length(powerspectrum)
     end
 end
 HFR=cellfun(@sum,HF_band,'UniformOutput',false);
-HFR(find([HFR{:}] == 0))={nan};  % 0 into nan
+% HFR(find([HFR{:}] == 0))={nan};  % 0 into nan
 
 clearvars F
 disp(' -HFR calculated')
@@ -125,7 +125,7 @@ for i=1:length(powerspectrum)
     end
 end
 MFR=cellfun(@sum,MFR_band,'UniformOutput',false);
-MFR(find([MFR{:}] == 0))={nan};  % 0 into nan
+% MFR(find([MFR{:}] == 0))={nan};  % 0 into nan
 
 clearvars F
 disp(' -MFR calculated')

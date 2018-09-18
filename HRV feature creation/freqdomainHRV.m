@@ -35,7 +35,7 @@ totpow=zeros(1,length(powerspectrum)); %preallocation
 for l=1:length(powerspectrum)
     if isempty(powerspectrum{l,1})==0
         totpow(1,l)=sum(powerspectrum{l,1}(f{1,l}<upperboundary));
-        totpow(totpow==0)=nan; %all zeroes to nan to avoid confusion between AS and QS
+%         totpow(totpow==0)=nan; %all zeroes to nan to avoid confusion between AS and QS
     end
 end
 disp(' -totpow calculated')
@@ -54,7 +54,7 @@ for l=1:length(powerspectrum)
     end
 end
 VLF=cellfun(@sum,VLF_band,'UniformOutput',false);
-VLF(find([VLF{:}] == 0))={nan};  % 0 into nan
+% VLF(find([VLF{:}] == 0))={nan};  % 0 into nan
 clearvars F
 disp(' -VLF calculated')
 
@@ -73,7 +73,7 @@ for l=1:length(powerspectrum)
     end
 end
 LF=cellfun(@sum,LF_band,'UniformOutput',false);
-LF(find([LF{:}] == 0))={nan};  % 0 into nan
+% LF(find([LF{:}] == 0))={nan};  % 0 into nan
 clearvars F
 disp(' -LF calculated')
 
@@ -100,7 +100,7 @@ for l=1:length(powerspectrum)
     end
 end
 HF=cellfun(@sum,HF_band,'UniformOutput',false);
-HF(find([HF{:}] == 0))={nan};  % 0 into nan
+% HF(find([HF{:}] == 0))={nan};  % 0 into nan
 
 clearvars F
 disp(' -HF calculated')
@@ -133,7 +133,7 @@ for l=1:length(powerspectrum)
     end
 end
 sHF=cellfun(@sum,sHF_band,'UniformOutput',false);
-sHF(find([sHF{:}] == 0))={nan};  % 0 into nan
+% sHF(find([sHF{:}] == 0))={nan};  % 0 into nan
 
 clearvars F
 disp(' -sHF calculated')
@@ -162,7 +162,7 @@ for l=1:length(powerspectrum)
     end
 end
 uHF=cellfun(@sum,uHF_band,'UniformOutput',false);
-uHF(find([uHF{:}] == 0))={nan};  % 0 into nan
+% uHF(find([uHF{:}] == 0))={nan};  % 0 into nan
 
 disp(' -uHF calculated')
 
