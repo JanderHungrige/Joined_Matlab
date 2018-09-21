@@ -106,13 +106,19 @@ for J=1:size(Meaned_SampEn,1) % Now find Turning point and minimum SempE or maxi
 end
 
 % #8 
-for i=1:length(RR)-length(unique(rowNaN))
+for i=1:length(RR)-nancounter
 %     r_opt(i,1)=SDNN{1,i}*fact(idx(i,1)); % Create the optimal r value for the 5min epoch based on the most similar SampEn to the Framed_meaned_SampEn
     r_opt(i,1)=r(idx(i,1)); % Create the optimal r value for the 5min epoch based on the most similar SampEn to the Framed_meaned_SampEn    
 %     r_opt_collection(i,2)=r_opt(i,1)/SDNN{1,i}; % get the % values for comparison
 end
 NaNidx = unique(rowNaN);
-r_opt = insertrows(r_opt, nan, NaNidx); % Now filling in the nans again at the correct index
+tempraer=NaN(length(unique(rowNaN)));
+
+newMat = insertrows(mat1, mat2, 2)
+nanfiller=nan(length(unique(rowNaN)),1);
+r_opt
+r_opt=[nanfiller ; r_opt];
+
 
 for j=1:length(RR)
     if all(isnan(RR{j,1}))==0

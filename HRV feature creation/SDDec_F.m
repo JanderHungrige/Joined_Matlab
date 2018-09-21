@@ -8,7 +8,7 @@ function SDDEC=SDDec_F(RR)
 
 for i=1:length(RR)
     if all(isnan(RR{i,1}))
-        SDDEC{i,1}=nan;
+        SDDEC{1,i}=nan;
         continue
     end    
     [~, columns]=find(RR{i,1}>nanmean(RR{i,1}));

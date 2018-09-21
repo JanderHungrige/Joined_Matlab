@@ -45,7 +45,6 @@ if strcmp('ECG',dataset) || strcmp('cECG',dataset)
     if strcmp('ECG',dataset)
         if strcmp(systeminuse,'c3po')
             datapath='D:\PhD\Article_3_(cECG)\';
-            safepathmix='D:\PhD\Matrix_sets\Single_Matrices\cECG' ;
         elseif strcmp(systeminuse,'Philips')
             datapath='C:\Users\310122653\Documents\PhD\Article_3_(cECG)\';
         end                    
@@ -66,7 +65,6 @@ elseif strcmp('MMC',dataset)
     MixNrcECGMMC=[10,11,12,13,14,15,26,27,28,29,20,21,22,23,24,25,26,27,28,29,30,31,32];
     if strcmp(systeminuse,'c3po')
         datapath='D:\PhD\Article_4_(MMC)\';
-        safepathmix='D:\PhD\Matrix_sets\Single_Matrices\MMC' ;        
     elseif strcmp(systeminuse,'Philips')
         datapath='C:\Users\310122653\Documents\PhD\Article_4_(MMC)\';
     end
@@ -81,7 +79,7 @@ elseif strcmp('InnerSense',dataset)
     MixNrcECGInSe=[1,2,3,4,5,6,7,8];    
     if strcmp(systeminuse,'c3po')
         datapath='D:\PhD\Article_2_(EHV)\';
-        safepathmix='D:\PhD\Matrix_sets\Single_Matrices\InnerSense' ;
+        safepathmix='D:\PhD\Matrix_sets\Singel Matrices\InnerSense' ;
     elseif strcmp(systeminuse,'Philips')
         datapath='C:\Users\310122653\Documents\PhD\Article_2_(EHV)';
         safepathmix='???' ;
@@ -94,8 +92,8 @@ end
 if  strcmp('ECG',dataset) || strcmp('MMC',dataset) || strcmp('InnerSense',dataset)
     savefolder= ([datapathload '\Matrices\']);
     savefolderSession=([datapathload '\Matrices\Sessions\']);    
-    savefolderMix= ([safepathmix '\']);
-    savefolderSessionMix=([safepathmix '\Sessions\']);   
+    savefolderMix= ([safepathmix '\Matrices\']);
+    savefolderSessionMix=([safepathmix '\Matrices\Sessions\']);   
 elseif strcmp('cECG',dataset)==1
     savefolder= ([ datapathload '\DNN-Matrices\cMatrices'  '\']);
     savefolderSession=([ datapathload 'DNN-Matrices\cMatrices'  '\Sessions\']);    
@@ -109,8 +107,7 @@ AWFeature_path=[datapath 'weigthAge\'];
 
 if (exist(savefolder))==0;  mkdir([savefolder]);end
 if (exist(savefolderSession))==0;  mkdir([savefolderSession]);end
-if (exist(savefolderMix))==0;  mkdir([savefolderMix]);end
-if (exist(savefolderSessionMix))==0;  mkdir([savefolderSessionMix]);end
+
 
    Featurenames_time={...
         'BpE';...
@@ -338,9 +335,7 @@ for N=1:length(Pat)
 FeatureMatrix=FMtmp; 
         if saving
             Saving_Session_F(FeatureMatrix,savefolderSession, Neonate,i)
-            Saving_Session_A(Annotations,savefolderSession, Neonate,i)   
-            Saving_Session_F(FeatureMatrix,savefolderSessionMix, Neonate,i)
-            Saving_Session_A(Annotations,savefolderSessionMix, Neonate,i)             
+            Saving_Session_A(Annotations,savefolderSession, Neonate,i)       
         end
         
         if saving_for_mix % Same Matrices but differnt numbers to have continuopuse numbers when datasets are merged
@@ -392,8 +387,6 @@ FeatureMatrix=FMtmp;
     if saving
         Saving_F(FeatureMatrix,savefolder, Neonate,win)
         Saving_A(Annotations,savefolder, Neonate,win)
-        Saving_F(FeatureMatrix,savefolderMix, Neonate,win)
-        Saving_A(Annotations,savefolderMix, Neonate,win)        
     end
     
     if saving_for_mix % Same Matrices but differnt numbers to have continuopuse numbers when datasets are merged

@@ -20,9 +20,11 @@ for i=1:length(RR)
     if isempty(RR{i,1})==0
         RR{i,1}(2,:)=circshift(RR{i,1}',[1 0]);   %shifting the array to gain a Y and a Y+1(estimated) with wich we can determine the MSE
         [PSNR,MSE{1,i},MAXERR,L2RAT] = measerr(RR{i,1}(1),RR{i,1}(2)); %Calculating MSE
-        RMSSD=cellfun(@sqrt,MSE, 'Un', false); %sqare root over the MSE of the adjacent NN intervals creates the RMSSD
+    else
+        MSE{1,i}=nan; % fill it here with nan as otherwise [] at the end will just be ingored, reducing the siye and leading to missmatch errors
     end
 end
+        RMSSD=cellfun(@sqrt,MSE, 'Un', false); %sqare root over the MSE of the adjacent NN intervals creates the RMSSD, sqrt(nan)=nan
 
 %%%%%%%%%%%%replace [] with nan   
 

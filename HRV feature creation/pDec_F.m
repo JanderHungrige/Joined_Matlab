@@ -8,7 +8,7 @@ function pDEC=pDec_F(RR)
 
 for i=1:length(RR)
     if all(isnan(RR{i,1}))
-        pDEC{i,1}=nan;
+        pDEC{1,i}=nan;
         continue
     end
     pDEC{1,i}=sum(RR{i,1}>nanmean(RR{i,1}))/numel(RR{i,1})*100;
