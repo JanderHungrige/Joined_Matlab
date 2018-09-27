@@ -30,7 +30,7 @@
 clear
 clc
 tic
-dataset='InnerSense'; % ECG or cECG or MMC or InnerSense.
+dataset='MMC'; % ECG or cECG or MMC or InnerSense.
 saving=1;
 saving_for_mix=1;
 win=300; % window of annotations. 30 precicse, 300 smoothed
@@ -219,9 +219,11 @@ for N=1:length(Pat)
             dateiname=dir(namefillAnnot2);
         end
         load([loadfolderAnnotation dateiname.name]);
-
-
         
+        if (strcmp('ECG',dataset) || strcmp('cECG',dataset)) && length(Annotations)<10 % skipping one Session if it is shorter than 5min
+            continue
+        end
+               
 % all from one patient TIME DOMAIN
         for j=1:length(Featurenames_time) 
             if strcmp('ECG',dataset) || strcmp('cECG',dataset)
@@ -231,7 +233,7 @@ for N=1:length(Pat)
             end
             
             load([TFeature_path dateiname.name])
-            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
+            [tmp,Annotations]=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
              
         end
         tmp2=[tmp2,tmp]; % Adding the long single line of Feature into the Feature Matrix, where each row is one Feature        
@@ -246,7 +248,7 @@ for N=1:length(Pat)
             end            
             
             load([FFeature_path dateiname.name]);
-            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
+            [tmp,Annotations]=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
         end
         tmp3=[tmp3 ,tmp]; % Adding the long single line of Feature into the Feature Matrix, where each row is one Feature
         tmp={};
@@ -261,7 +263,7 @@ for N=1:length(Pat)
             end              
         
             load([NLFeature_path dateiname.name])
-            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
+            [tmp,Annotations]=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp) ;
                    
         end
         tmp4=[tmp4 ,tmp]; % Adding the long single line of Feature into the Feature Matrix, where each row is one Feature
@@ -276,7 +278,7 @@ for N=1:length(Pat)
             end              
         
             load([AWFeature_path dateiname.name])            
-            tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp);
+            [tmp,Annotations]=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp);
             tmp=cellfun(@(x) x/10,tmp,'un',0); % We need to have vlaues between 0 and 1 else the z score destroys the values. So we use 0.1 - 0.4 instead of 1-4 for the age features
              
         end
@@ -426,7 +428,7 @@ disp('* * * * * * * * * * ')
 toc
 %% Nested Matrixen
 
-function tmp=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp)
+function [tmp,Annotations]=Matrix_fill(Feature,dataset,Neonate,Annotations,tmp)
     if iscolumn(Feature) % Need to be a row vector
         Feature=Feature';
     end
