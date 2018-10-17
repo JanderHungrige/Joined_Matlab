@@ -27,6 +27,6 @@ cd('C:\Users\C3PO\Documents\GitHub\'); delete 'runnallstuf.mat' 'runnallstuf2.ma
 
 
  disp('Finished' )
- disp (['Duration MMC: '   dur1]);  
+ disp (['Duration MMC: '  dur1]);  
  disp (['Duration InSe: ' dur2]);  
  disp (['Duration cECG: ' dur3]);

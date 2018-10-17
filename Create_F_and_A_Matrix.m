@@ -30,7 +30,7 @@
 clear
 clc
 tic
-dataset='MMC'; % ECG or cECG or MMC or InnerSense.
+dataset='InnerSense'; % ECG or cECG or MMC or InnerSense.
 saving=1;
 saving_for_mix=1;
 win=300; % window of annotations. 30 precicse, 300 smoothed
@@ -39,9 +39,9 @@ systeminuse='c3po';
 if strcmp('ECG',dataset) || strcmp('cECG',dataset)
     Pat=[4,5,6,7,9,10,11,12,13];
     datapath='cECG_study\C_Processed_Data\';
-    Mixnrall=[9,10,11,12,13,14,15,16,17];
-    MixNrcECGMMC=[1,2,3,4,5,6,7,8,9];
-    MixNrcECGInSe=[9,10,11,12,13,14,15,16,17];
+    MixNr_all=[9,10,11,12,13,14,15,16,17];
+    MixNr_cECGMMC=[1,2,3,4,5,6,7,8,9];
+    MixNr_cECGInSe=[9,10,11,12,13,14,15,16,17];
     if strcmp('ECG',dataset)
         if strcmp(systeminuse,'c3po')
             datapath='D:\PhD\Article_3_(cECG)\';
@@ -61,9 +61,9 @@ if strcmp('ECG',dataset) || strcmp('cECG',dataset)
 elseif strcmp('MMC',dataset) 
     PatientID=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]; % core. Show all patients in the folder
     Pat=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
-    Mixnrall=[18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39];
-    MixNrcECGMMC=[10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
-    MixNrInSeMMC=[9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+    MixNr_all=[18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39];
+    MixNr_cECGMMC=[10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
+    MixNr_InSeMMC=[9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
     
     if strcmp(systeminuse,'c3po')
         datapath='D:\PhD\Article_4_(MMC)\';
@@ -77,9 +77,9 @@ elseif strcmp('MMC',dataset)
 
 elseif strcmp('InnerSense',dataset) 
     Pat=[3,4,5,6,7,9,13,15];
-    Mixnrall=[1,2,3,4,5,6,7,8];
-    MixNrInSeMMC=[1,2,3,4,5,6,7,8];
-    MixNrcECGInSe=[1,2,3,4,5,6,7,8];    
+    MixNr_all=[1,2,3,4,5,6,7,8];
+    MixNr_InSeMMC=[1,2,3,4,5,6,7,8];
+    MixNr_cECGInSe=[1,2,3,4,5,6,7,8];    
     if strcmp(systeminuse,'c3po')
         datapath='D:\PhD\Article_2_(EHV)\';
         safepathmix='D:\PhD\Matrix_sets\Single_Matrices\InnerSense' ;
@@ -292,16 +292,23 @@ for N=1:length(Pat)
 
         % remove total epoch if all values are nan, also in annotations to
         % not lose synch
-        idx=cellfun(@(FeatureMatrix) all(isnan(FeatureMatrix)),FeatureMatrix);
-        c=any(idx);% find index where one cell element(any) is all nan (row before)
+        idxNan=cellfun(@(FeatureMatrix) all(isnan(FeatureMatrix)),FeatureMatrix);
+%         [r,c]=find(isnan(cell2mat(FeatureMatrix)));
+        c=any(idxNan);% find index where one cell element(any) is all nan (row before)
         FeatureMatrix(:,c)=[];
         Annotations(:,c)=[];
         clearvars c
+
+        idxInf=cellfun(@(FeatureMatrix) all(isinf(FeatureMatrix)),FeatureMatrix);
+        c=any(idxInf);% find index where one cell element(any) is all inf (row before)
+        FeatureMatrix(:,c)=[];
+        Annotations(:,c)=[];        
+        clearvars c
         % remove all nans from each cell, as there are mostly less nans than 30s, it just
         % reduces the first epoch. Deleting nans as the standard scaler of Python cannot handle nans
-        for fm = 1:numel(FeatureMatrix)
-            FeatureMatrix{fm} = FeatureMatrix{fm}(~isnan(FeatureMatrix{fm}),:) ;            
-        end
+%         for fm = 1:numel(FeatureMatrix)
+%             FeatureMatrix{fm} = FeatureMatrix{fm}(~isnan(FeatureMatrix{fm}),:) ;            
+%         end
         FMtmp=cell2mat(FeatureMatrix);
         
         
@@ -348,22 +355,22 @@ FeatureMatrix=FMtmp;
         
         if saving_for_mix % Same Matrices but differnt numbers to have continuopuse numbers when datasets are merged
             if strcmp('MMC',dataset) || strcmp('InnerSense',dataset)
-            MixNr=MixNrInSeMMC(N);Mixpath='D:\PhD\Matrix_sets\Inner_Sence_MMC\';MixpathS='D:\PhD\Matrix_sets\Inner_Sence_MMC\Sessions\';
+            MixNr=MixNr_InSeMMC(N);Mixpath='D:\PhD\Matrix_sets\Inner_Sence_MMC\';MixpathS='D:\PhD\Matrix_sets\Inner_Sence_MMC\Sessions\';
                 Saving_Session_F(FeatureMatrix,MixpathS, MixNr,i)
                 Saving_Session_A(Annotations,MixpathS, MixNr,i)
             end
             if strcmp('cECG',dataset) || strcmp('InnerSense',dataset)    
-            MixNr=MixNrcECGInSe(N);Mixpath='D:\PhD\Matrix_sets\Inner_Sense_cECG\';MixpathS='D:\PhD\Matrix_sets\Inner_Sense_cECG\Sessions\';
+            MixNr=MixNr_cECGInSe(N);Mixpath='D:\PhD\Matrix_sets\Inner_Sense_cECG\';MixpathS='D:\PhD\Matrix_sets\Inner_Sense_cECG\Sessions\';
                 Saving_Session_F(FeatureMatrix,MixpathS, MixNr,i)
                 Saving_Session_A(Annotations,MixpathS, MixNr,i)
             end
             if strcmp('MMC',dataset) || strcmp('InnerSense',dataset) || strcmp('ECG',dataset)    
-            MixNr=Mixnrall(N);Mixpath='D:\PhD\Matrix_sets\All\';MixpathS='D:\PhD\Matrix_sets\All\Sessions\';
+            MixNr=MixNr_all(N);Mixpath='D:\PhD\Matrix_sets\All\';MixpathS='D:\PhD\Matrix_sets\All\Sessions\';
                 Saving_Session_F(FeatureMatrix,MixpathS, MixNr,i)
                 Saving_Session_A(Annotations,MixpathS, MixNr,i)
             end
             if strcmp('MMC',dataset) || strcmp('ECG',dataset)     
-            MixNr=MixNrcECGMMC(N);Mixpath='D:\PhD\Matrix_sets\cECG_MMc\';MixpathS='D:\PhD\Matrix_sets\cECG_MMc\Sessions\';
+            MixNr=MixNr_cECGMMC(N);Mixpath='D:\PhD\Matrix_sets\cECG_MMc\';MixpathS='D:\PhD\Matrix_sets\cECG_MMc\Sessions\';
                 Saving_Session_F(FeatureMatrix,MixpathS, MixNr,i)
                 Saving_Session_A(Annotations,MixpathS, MixNr,i) 
             end
@@ -401,22 +408,22 @@ FeatureMatrix=FMtmp;
     
     if saving_for_mix % Same Matrices but differnt numbers to have continuopuse numbers when datasets are merged
         if strcmp('MMC',dataset) || strcmp('InnerSense',dataset)
-        MixNr=MixNrInSeMMC(N);Mixpath='D:\PhD\Matrix_sets\Inner_Sence_MMC\';MixpathS='D:\PhD\Matrix_sets\Inner_Sence_MMC\Sessions\';
+        MixNr=MixNr_InSeMMC(N);Mixpath='D:\PhD\Matrix_sets\Inner_Sence_MMC\';MixpathS='D:\PhD\Matrix_sets\Inner_Sence_MMC\Sessions\';
             Saving_F(FeatureMatrix,Mixpath, MixNr,win)
             Saving_A(Annotations,Mixpath, MixNr,win)
         end
         if strcmp('ECG',dataset) || strcmp('InnerSense',dataset)    
-        MixNr=MixNrcECGInSe(N);Mixpath='D:\PhD\Matrix_sets\Inner_Sense_cECG\';MixpathS='D:\PhD\Matrix_sets\Inner_Sense_cECG\Sessions\';
+        MixNr=MixNr_cECGInSe(N);Mixpath='D:\PhD\Matrix_sets\Inner_Sense_cECG\';MixpathS='D:\PhD\Matrix_sets\Inner_Sense_cECG\Sessions\';
             Saving_F(FeatureMatrix,Mixpath, MixNr,win)
             Saving_A(Annotations,Mixpath, MixNr,win)
         end
         if strcmp('MMC',dataset) || strcmp('InnerSense',dataset) || strcmp('ECG',dataset)    
-        MixNr=Mixnrall(N);Mixpath='D:\PhD\Matrix_sets\All\';MixpathS='D:\PhD\Matrix_sets\All\Sessions\';
+        MixNr=MixNr_all(N);Mixpath='D:\PhD\Matrix_sets\All\';MixpathS='D:\PhD\Matrix_sets\All\Sessions\';
             Saving_F(FeatureMatrix,Mixpath, MixNr,win)
             Saving_A(Annotations,Mixpath, MixNr,win)
         end
         if strcmp('MMC',dataset) || strcmp('ECG',dataset)     
-        MixNr=MixNrcECGMMC(N);Mixpath='D:\PhD\Matrix_sets\cECG_MMc\';MixpathS='D:\PhD\Matrix_sets\cECG_MMc\Sessions\';
+        MixNr=MixNr_cECGMMC(N);Mixpath='D:\PhD\Matrix_sets\cECG_MMc\';MixpathS='D:\PhD\Matrix_sets\cECG_MMc\Sessions\';
             Saving_F(FeatureMatrix,Mixpath, MixNr,win)
             Saving_A(Annotations,Mixpath, MixNr,win) 
         end
@@ -495,6 +502,49 @@ end
     end
     
 
-
-
-% end
+% NameNumber={...
+%         'BpE';...
+%         'LL';...
+%         'aLL';...
+%         'NN10'; 'NN20';'NN30';'NN50';...
+%         'pNN10'; 'pNN20';'pNN30';'pNN50';...
+%         'RMSSD';...
+%         'SDaLL';...
+%         'SDANN';...
+%         'SDLL';...
+%         'SDNN';... 
+%         'pDEC';...
+%         'SDDEC';...               
+%         'HF';...
+%         'HFnorm';...
+%         'LF';...
+%         'LFnorm';...
+%         'ratioLFHF';...
+%         'sHF';...
+%         'sHFnorm';...
+%         'totpow';...
+%         'uHF';...
+%         'uHFnorm';...
+%         'VLF';...
+%         'HFR';...
+%         'HFnormR';...
+%         'LFnormR';...
+%         'MFR';...
+%         'MFnormR';...
+%         'ratioLFHFR';...
+%         'ratioMFHFR';...
+%         'totpowR';...   
+%         'SampEn';...
+%         'QSE';...
+%         'SEAUC';...
+%         'LZNN';...
+%         'LZECG';... 
+%         'LZEDR';...
+% %         'QSE_EDR';...
+% %         'SampEn_EDR';...
+% %         'SEAUC_EDR';...
+%         'Age_diff';...
+%         'Birthweight';...
+%         'CA';...
+%         'GA';...
+%         };

@@ -69,7 +69,9 @@ for i=1:length(ECG)
     Hilberttimeseries(Binarieinz,1)=1; 
     Hilberttimeseries(Binarinull,1)=0;
     Hilbertsrting = binary_seq_to_string(Hilberttimeseries);
-    [LZECG{i,1},~,~] = calc_lz_complexity(Hilbertsrting, type, normalize);
+%     [LZECG{i,1},~,~] = calc_lz_complexity(Hilbertsrting, type, normalize);
+    [LZECG{i,1},~,~] = calc_lz_complexity(Hilberttimeseries, type, normalize);
+
 end
     
 

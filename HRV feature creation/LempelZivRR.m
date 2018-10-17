@@ -63,7 +63,9 @@ for i=1:length(RR)
     Hilberttimeseries(Binarieinz,1)=1; 
     Hilberttimeseries(Binarinull,1)=0;
     Binstring = binary_seq_to_string(Hilberttimeseries);
-    [LZNN{i,1},~,~] = calc_lz_complexity(Binstring, type, normalize);
+%     [LZNN{i,1},~,~] = calc_lz_complexity(Binstring, type, normalize);
+    [LZNN{i,1},~,~] = calc_lz_complexity(Hilberttimeseries, type, normalize);
+    
 end
     
 

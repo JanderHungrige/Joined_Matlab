@@ -117,6 +117,11 @@ disp(' -HFnorm calculated')
     %% LF/HF Ratio LF/HF 
     
 ratioLFHF=cellfun(@(LF,HF) (LF)/(HF), LF,HF);
+ratioLFHF(isinf(ratioLFHF))=0;
+%If the HF power is zero, we devide by zero and create inf value
+% find index where one cell element(any) is all inf (row before)
+%Therfore, turn inf into 0
+
 disp(' -ratioLFHF calculated')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

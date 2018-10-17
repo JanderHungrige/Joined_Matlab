@@ -106,10 +106,9 @@ disp(' -HFnormR calculated')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% LF/HF Ratio LF/HF 
     
-
 ratioLFHFR=cellfun(@(LFR,HFR) (LFR)/(HFR), LFR,HFR);
- 
-disp(' -ratioLFHF calculated')
+ratioLFHFR(isinf(ratioLFHFR))=0;% If HF =0 we devide by 0 creating inf
+disp(' -ratioLFHFR calculated')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%  MF power in medium frequency range (preterm 0.84-0.56 Hz)
@@ -143,8 +142,8 @@ disp(' -MFnormR calculated')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% MF/HF Ratio MF/HF    
 
-ratioMFHFR=cellfun(@(MFR,HFR) (MFR)/(HFR), MFR,HFR);
-  
+ratioMFHFR=cellfun(@(MFR,HFR) (MFR)/(HFR), MFR,HFR); 
+ratioMFHFR(isinf(ratioMFHFR))=0;% If HF =0 we devide by 0 creating inf
 disp(' -ratioMFHFR calculated')
 
 
